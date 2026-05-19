@@ -1,0 +1,15 @@
+const express = require('express');
+const controller = require('../controllers/payroll.controller');
+const auth = require('../middlewares/auth.middleware');
+const allowRoles = require('../middlewares/rbac.middleware');
+const validate = require('../middlewares/validator.middleware');
+const { runPayrollSchema } = require('../validators/payroll.validator');
+const router = express.Router();
+router.use(auth);
+router.post('/run', allowRoles('ADMIN', 'HR_MANAGER'), validate(runPayrollSchema), controller.runPayroll);
+router.get('/', allowRoles('ADMIN', 'HR_MANAGER', 'FINANCE'), controller.listPayrolls);
+router.get('/my', allowRoles('EMPLOYEE'), controller.getMyPayrolls);
+router.get('/reports/cost', allowRoles('ADMIN', 'HR_MANAGER', 'FINANCE'), controller.getCostReport);
+router.get('/:id', allowRoles('ADMIN', 'HR_MANAGER', 'FINANCE', 'EMPLOYEE'), controller.getPayrollById);
+router.patch('/:id/approve', allowRoles('ADMIN', 'HR_MANAGER'), controller.approvePayroll);
+module.exports = router;

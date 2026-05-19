@@ -1,0 +1,11 @@
+const express = require('express');
+const controller = require('../controllers/department.controller');
+const auth = require('../middlewares/auth.middleware');
+const allowRoles = require('../middlewares/rbac.middleware');
+const router = express.Router();
+router.use(auth);
+router.get('/', controller.listDepartments);
+router.post('/', allowRoles('ADMIN', 'HR_MANAGER'), controller.createDepartment);
+router.put('/:id', allowRoles('ADMIN', 'HR_MANAGER'), controller.updateDepartment);
+router.delete('/:id', allowRoles('ADMIN'), controller.deleteDepartment);
+module.exports = router;
