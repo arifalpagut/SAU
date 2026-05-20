@@ -1,0 +1,12 @@
+const express = require('express');
+const controller = require('../controllers/parameter.controller');
+const auth = require('../middlewares/auth.middleware');
+const allowRoles = require('../middlewares/rbac.middleware');
+const router = express.Router();
+router.use(auth);
+router.get('/payroll', allowRoles('ADMIN', 'HR_MANAGER', 'FINANCE'), controller.listPayrollParams);
+router.put('/payroll/:id', allowRoles('ADMIN', 'HR_MANAGER'), controller.updatePayrollParam);
+router.get('/leave-types', allowRoles('ADMIN', 'HR_MANAGER'), controller.listLeaveTypes);
+router.put('/leave-types/:id', allowRoles('ADMIN', 'HR_MANAGER'), controller.updateLeaveType);
+router.post('/leave-types', allowRoles('ADMIN', 'HR_MANAGER'), controller.createLeaveType);
+module.exports = router;
