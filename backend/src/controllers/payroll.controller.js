@@ -1,0 +1,16 @@
+const payrollService = require('../services/payroll.service');
+const catchAsync = require('../utils/catchAsync');
+const { success } = require('../utils/responseHelper');
+const calculate = catchAsync(async (req, res) => { return success(res, await payrollService.calculateOnly(req.body), 'Bordro hesaplandi'); });
+const generate = catchAsync(async (req, res) => { const data = await payrollService.generatePayroll(req.body); res.locals.audit = { action: 'GENERATE_PAYROLL', entityType: 'payrolls', entityId: data.id, newValues: req.body }; return success(res, data, 'Bordro olusturuldu', 201); });
+const runPayroll = catchAsync(async (req, res) => { const data = await payrollService.runPayroll(req.body.month, req.body.year); res.locals.audit = { action: 'RUN_PAYROLL', entityType: 'payrolls', newValues: req.body }; return success(res, data, 'Toplu bordro tamamlandi'); });
+const listPayrolls = catchAsync(async (req, res) => { return success(res, await payrollService.listPayrolls(req.query), 'Bordro listesi'); });
+const getPayrollById = catchAsync(async (req, res) => { return success(res, await payrollService.getPayrollById(req.params.id, req.user), 'Bordro detayi'); });
+const getPayrollsByEmployee = catchAsync(async (req, res) => { return success(res, await payrollService.getPayrollsByEmployee(req.params.employeeId, req.user), 'Calisan bordrolari'); });
+const getPayrollsByPeriod = catchAsync(async (req, res) => { return success(res, await payrollService.getPayrollsByPeriod(Number(req.params.year), Number(req.params.month)), 'Donem bordrolari'); });
+const approvePayroll = catchAsync(async (req, res) => { const data = await payrollService.approvePayroll(req.params.id, req.user.id); res.locals.audit = { action: 'APPROVE_PAYROLL', entityType: 'payrolls', entityId: data.id }; return success(res, data, 'Bordro onaylandi'); });
+const cancelPayroll = catchAsync(async (req, res) => { const data = await payrollService.cancelPayroll(req.params.id); res.locals.audit = { action: 'CANCEL_PAYROLL', entityType: 'payrolls', entityId: data.id }; return success(res, data, 'Bordro iptal edildi'); });
+const getMyPayrolls = catchAsync(async (req, res) => { return success(res, await payrollService.getMyPayrolls(req.user), 'Kendi bordrolariniz'); });
+const getCostReport = catchAsync(async (req, res) => { return success(res, await payrollService.getCostReport(req.query), 'Maliyet raporu'); });
+const listParameters = catchAsync(async (req, res) => { return success(res, await payrollService.listParameters(req.query.year), 'Parametreler'); });
+module.exports = { calculate, generate, runPayroll, listPayrolls, getPayrollById, getPayrollsByEmployee, getPayrollsByPeriod, approvePayroll, cancelPayroll, getMyPayrolls, getCostReport, listParameters };
