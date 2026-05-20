@@ -1,14 +1,6 @@
-import api from './api';
+import api from "./api";
 
-export const leaveService = {
-  getLeaves: (params) => api.get('/leaves', { params }),
-  getLeaveById: (id) => api.get(`/leaves/${id}`),
-  createLeave: (data) => api.post('/leaves', data),
-  updateLeave: (id, data) => api.put(`/leaves/${id}`, data),
-  deleteLeave: (id) => api.delete(`/leaves/${id}`),
-  approveLeave: (id, data = {}) => api.patch(`/leaves/${id}/approve`, data),
-  rejectLeave: (id, data = {}) => api.patch(`/leaves/${id}/reject`, data),
-  getLeaveSummary: (params) => api.get('/reports/leave-summary', { params }),
-};
-
-export default leaveService;
+export const getLeaves = (params) => api.get("/leaves", { params });
+export const getLeave = (id) => api.get(`/leaves/${id}`);
+export const createLeave = (data) => api.post("/leaves", data);
+export const updateLeave = (id, data) => api.patch(`/leaves/${id}`, data);

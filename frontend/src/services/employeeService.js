@@ -1,11 +1,7 @@
-import api from './api';
+import api from "./api";
 
-export const employeeService = {
-  getAll: (params) => api.get('/employees', { params }),
-  getById: (id) => api.get(`/employees/${id}`),
-  create: (data) => api.post('/employees', data),
-  update: (id, data) => api.put(`/employees/${id}`, data),
-  remove: (id) => api.delete(`/employees/${id}`),
-};
-
-export default employeeService;
+export const getEmployees = (params) => api.get("/employees", { params });
+export const getEmployee = (id) => api.get(`/employees/${id}`);
+export const createEmployee = (data) => api.post("/employees", data);
+export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
+export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
